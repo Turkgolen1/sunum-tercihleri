@@ -167,26 +167,26 @@ const WEEKS=[
   {d:"25 Kasım"},{d:"2 Aralık"},{d:"9 Aralık"},{d:"16 Aralık"},{d:"23 Aralık"},{d:"30 Aralık"}
 ];
 const GROUPS=[
-  {id:"g16",no:16,short:"Grup 16"},
-  {id:"g22",no:22,short:"Grup 22"},
-  {id:"n-endustri",no:23,short:"Grup 23"},
-  {id:"g33",no:33,short:"Grup 33"},
-  {id:"g37",no:37,short:"Grup 37"},
-  {id:"g38",no:38,short:"Grup 38"},
-  {id:"g44",no:44,short:"Grup 44"},
-  {id:"g55",no:55,short:"Grup 55"},
-  {id:"g58",no:58,short:"Grup 58"},
-  {id:"g66",no:66,short:"Grup 66"},
-  {id:"n-yeni",no:67,short:"Grup 67"},
-  {id:"n-kutuphane",no:75,short:"Grup 75"},
-  {id:"n-dusunce",no:86,short:"Grup 86"},
-  {id:"n-eticaret",no:93,short:"Grup 93"}
+  {id:"g16",no:16,short:"Grup 16",members:["Ömer Burak İ.", "Serhat K.", "Enes A.", "Zeynep Feyza K.", "Sena G.", "Ceren K."]},
+  {id:"g22",no:22,short:"Grup 22",members:["Gülvera Beril K.", "Saadet Nur Ö.", "Ayşe Sude Ö.", "Ayşenur U.", "Fadime Y.", "Asiye Y."]},
+  {id:"n-endustri",no:23,short:"Grup 23",members:["Ayla K.", "Malak S.", "Ahmet Uğur K.", "Dıamond Dımas B.", "Esra A.", "Şevval Ece Y."]},
+  {id:"g33",no:33,short:"Grup 33",members:["Yasin Eren U.", "Mehmet Akif Ç.", "Berker P.", "Berkay N.", "Emirhan T.", "Enes Malik E."]},
+  {id:"g37",no:37,short:"Grup 37",members:["Efe B.", "Hasan K.", "Cafer Ö.", "Emirhan Ş.", "Mustafa İ.", "Ali U."]},
+  {id:"g38",no:38,short:"Grup 38",members:["Elifnur U.", "Yağmur Y.", "Ceren K.", "Semanur A.", "Mustafa Eren Y.", "Mehmet Can H.", "Erol Ü.", "Mustafa K."]},
+  {id:"g44",no:44,short:"Grup 44",members:["Deniz Ö.", "Yusuf Burak K.", "Feride K.", "Zeynep B.", "Ayşenur Y.", "Aysel U.", "Sefa Nur Y."]},
+  {id:"g55",no:55,short:"Grup 55",members:["Sudenur G.", "Zehra Y.", "Hatice K.", "Ayşegül K.", "Muhammet Salih A."]},
+  {id:"g58",no:58,short:"Grup 58",members:["Mevlüt K.", "Ertuğrul A.", "Yusuf K.", "Oğuz Furkan Y.", "Vedat G.", "Engin A."]},
+  {id:"g66",no:66,short:"Grup 66",members:["Akif Ç.", "Faruk E.", "Yaren Ö.", "Arda A.", "Muhammed Ali S.", "Rukiye E.", "İrem Ç."]},
+  {id:"n-yeni",no:67,short:"Grup 67",members:["Mücahit Y.", "Nurhayat K.", "Şeyma Nur K.", "Şerife Sena G.", "Beyza A.", "Rahmi Ö."]},
+  {id:"n-kutuphane",no:75,short:"Grup 75",members:["Melek Nas Ç.", "Dilara Ş.", "Canan A.", "Fatih K.", "Mustafa K.", "Furkan Süha O."]},
+  {id:"n-dusunce",no:86,short:"Grup 86",members:["Ogulmaral A.", "Mediha Sude E.", "Zehra İrem Y.", "Rumeysa T.", "Aynur G."]},
+  {id:"n-eticaret",no:93,short:"Grup 93",members:["Ramazan K.", "Ramazan Ö.", "Tarık A.", "Çağatay G.", "Muhammed Emir V.", "Mert K."]}
 ];
 // Capacity from group count: even base per week, remainder goes to the last weeks.
 const base=Math.floor(GROUPS.length/WEEKS.length), extra=GROUPS.length%WEEKS.length;
 WEEKS.forEach((w,i)=>{w.cap=base+(i>=WEEKS.length-extra?1:0)});
 const byId=Object.fromEntries(GROUPS.map(g=>[g.id,g]));
-const label=g=>`Grup ${g.no}`;
+const label=g=>`Grup ${g.no} – ${(g.members||[]).join(", ")}`;
 
 
 const SB_URL="https://wipkhqtlpeadjhzrvuyt.supabase.co", SB_KEY="sb_publishable_2kTxbaAA9hAfoCJl5kZRDQ_uDUMIgSB";
