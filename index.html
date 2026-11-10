@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sunum Haftası Tercihleri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+body{margin:0}
+/* Layout: header with rules → week board (6 columns, wraps) → preference form → owner-only reasons */
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --fg:#17202a; --muted:#5b6673; --line:#d9dee4;
+  --accent:#1d5c7a; --accent-soft:#e1edf3; --accent-fg:#ffffff;
+  --ok:#2f7a4f; --ok-soft:#e3f2e9; --warn:#a4570d; --warn-soft:#fbeedd; --bad:#b0362f; --bad-soft:#f9e4e2;
+  --font-display:"Space Grotesk",system-ui,sans-serif; --font-body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11161b; --surface:#192129; --fg:#e7edf2; --muted:#9aa6b2; --line:#2c3742;
+  --accent:#6fb3d4; --accent-soft:#1d3240; --accent-fg:#0d1a22;
+  --ok:#6cc595; --ok-soft:#18301f; --warn:#e7a35a; --warn-soft:#352614; --bad:#ef8a82; --bad-soft:#3a1d1b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161b; --surface:#192129; --fg:#e7edf2; --muted:#9aa6b2; --line:#2c3742;
+  --accent:#6fb3d4; --accent-soft:#1d3240; --accent-fg:#0d1a22;
+  --ok:#6cc595; --ok-soft:#18301f; --warn:#e7a35a; --warn-soft:#352614; --bad:#ef8a82; --bad-soft:#3a1d1b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:32px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:28px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(26px,4vw,36px);font-weight:700}
+h2{font-size:20px;font-weight:600}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+header{display:grid;gap:10px}
+header p{margin:0;color:var(--muted);max-width:68ch}
+.facts{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--muted)}
+.facts b{color:var(--fg);font-weight:600}
+.notice{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--muted)}
+.notice[data-kind="warn"]{border-color:var(--warn);background:var(--warn-soft);color:var(--fg)}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.week{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px;align-content:start;min-width:0}
+.week-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.week-date{font-family:var(--font-display);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.week-day{font-size:12px;color:var(--muted)}
+.week-no{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.slots{display:flex;gap:4px}
+.slot{flex:1;height:6px;border-radius:3px;background:var(--line)}
+.slot.on{background:var(--accent)}
+.slot.over{background:var(--bad)}
+.status{font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;justify-self:start}
+.status.ok{background:var(--ok-soft);color:var(--ok)}
+.status.full{background:var(--accent-soft);color:var(--accent)}
+.status.over{background:var(--bad-soft);color:var(--bad)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;padding:3px 9px;border-radius:999px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);font-weight:500;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip.alt{background:transparent;color:var(--accent);border-style:dashed}
+.chip .r{margin-left:4px;opacity:.85}
+.empty{font-size:13px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted);align-items:center}
+.legend .chip{pointer-events:none}
+.grid2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:20px}
+@media (max-width:820px){.grid2{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:16px;align-content:start;min-width:0}
+form{display:grid;gap:14px}
+label{display:grid;gap:6px;font-weight:600;font-size:14px}
+label .hint{font-weight:400;color:var(--muted);font-size:13px}
+select,textarea{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+textarea{min-height:88px;resize:vertical}
+select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:480px){.row{grid-template-columns:1fr}}
+button{font:inherit;font-weight:600;border-radius:8px;padding:10px 16px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+button:disabled{opacity:.55;cursor:not-allowed}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.msg{font-size:13.5px}
+.msg.ok{color:var(--ok)} .msg.err{color:var(--bad)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.missing{display:flex;flex-wrap:wrap;gap:6px}
+.missing span{font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:var(--muted)}
+.small{font-size:13px;color:var(--muted);margin:0}
+summary{cursor:pointer;font-family:var(--font-display);font-weight:600;font-size:16px}
+input{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%;max-width:280px}
+input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ownerform{margin-top:12px}
+@media (prefers-reduced-motion:no-preference){.week{transition:border-color .2s}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Bilişim Projeleri Yönetimi · Proje sunumları</div>
+    <h1>Sunum haftası tercihleri</h1>
+    <p>Sunumlar 25 Kasım – 30 Aralık arasında her çarşamba yapılacak. Grubunuzu seçip sunum yapmak istediğiniz haftayı işaretleyin. Bu liste kesin program değildir ve tercih sırasının bir önemi yoktur: bir haftayı çok grup isterse, tercihler ve gerekçeler değerlendirilerek tüm gruplar haftalara dağıtılacak.</p>
+    <div class="facts" id="facts"></div>
+  </header>
+
+  <div class="notice" id="status" hidden></div>
+
+  <section aria-labelledby="board-h" style="display:grid;gap:12px">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:baseline">
+      <h2 id="board-h">Haftalara göre tercihler</h2>
+      <div class="legend">
+        <span class="chip">1. tercih</span>
+        <span class="chip alt">2. tercih</span>
+        <span>✎ gerekçe eklenmiş</span>
+      </div>
+    </div>
+    <div class="board" id="board"></div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel" aria-labelledby="form-h">
+      <h2 id="form-h">Tercih yap</h2>
+      <form id="form" novalidate>
+        <label for="group">Grubunuz
+          <select id="group" required></select>
+        </label>
+        <div class="row">
+          <label for="first">1. tercih
+            <select id="first" required></select>
+          </label>
+          <label for="second">2. tercih
+            <select id="second" required></select>
+          </label>
+        </div>
+        <label for="reason">Gerekçe <span class="hint">İsteğe bağlı. Örneğin: “Bir üyemizin 9 Aralık'ta ameliyatı var.” Gerekçeyi yalnızca ders sorumlusu görür.</span>
+          <textarea id="reason" maxlength="600"></textarea>
+        </label>
+        <div class="actions">
+          <button type="submit" id="save">Tercihi kaydet</button>
+          <button type="button" class="ghost" id="clear" hidden>Tercihi geri çek</button>
+          <span class="msg" id="msg" role="status"></span>
+        </div>
+      </form>
+      <p class="small">Aynı grup için tekrar kaydederseniz önceki tercih güncellenir. Grubun tek bir tercihi olur; grubunuzla konuşarak işaretleyin.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="miss-h">
+      <h2 id="miss-h">Henüz tercih yapmayan gruplar</h2>
+      <div class="missing" id="missing"></div>
+      <p class="small" id="progress"></p>
+    </section>
+  </div>
+
+  <details class="panel" id="owner">
+    <summary>Ders sorumlusu girişi</summary>
+    <form id="ownerForm" class="ownerform">
+      <label for="code">Yönetici kodu <span class="hint">Gerekçeleri yalnızca bu kodu bilen görür.</span>
+        <input id="code" type="password" autocomplete="off" required>
+      </label>
+      <div class="actions"><button type="submit">Gerekçeleri göster</button><span class="msg" id="ownerMsg" role="status"></span></div>
+    </form>
+    <div class="tablewrap" id="reasonsWrap" hidden><table>
+      <thead><tr><th>Grup</th><th>1. tercih</th><th>2. tercih</th><th>Gerekçe</th><th>Tarih</th></tr></thead>
+      <tbody id="reasons"></tbody>
+    </table></div>
+  </details>
+</div>
+
+<script>
+const WEEKS=[
+  {d:"25 Kasım"},{d:"2 Aralık"},{d:"9 Aralık"},{d:"16 Aralık"},{d:"23 Aralık"},{d:"30 Aralık"}
+];
+const GROUPS=[
+  {id:"g16",no:16,topic:"",short:"Grup 16"},
+  {id:"g22",no:22,topic:"Şehir İçi Toplu Taşımada Akıllı Yolcu Bilgilendirme Sistemi",short:"Grup 22"},
+  {id:"g33",no:33,topic:"Renk Körlüğü Olan Bireyler İçin Kişiselleştirilmiş Android Uygulaması",short:"Grup 33"},
+  {id:"g37",no:37,topic:"Apartman Yönetimlerinde Borçluları Bulma, Bilgilendirme ve Yaptırım Sistemi",short:"Grup 37"},
+  {id:"g38",no:38,topic:"Konum Bazlı Ücretsiz Fırsat ve Öğrenci Dayanışma Uygulaması",short:"Grup 38"},
+  {id:"g44",no:44,topic:"Staj Yeri Değerlendirme Platformu",short:"Grup 44"},
+  {id:"g55",no:55,topic:"",short:"Grup 55"},
+  {id:"g58",no:58,topic:"Tatil Rotasyon ve Rezervasyon Sistemi",short:"Grup 58"},
+  {id:"g66",no:66,topic:"Saha Çalışanları İçin Görev ve Vardiya Takip Uygulaması",short:"Grup 66"},
+  {id:"n-endustri",no:null,topic:"Endüstriyel Vardiya ve Arıza Takip Sistemi",short:"Endüstriyel Vardiya"},
+  {id:"n-dusunce",no:null,topic:"Düşünce Haritalama ve Problem Çözme Sistemi",short:"Düşünce Haritalama"},
+  {id:"n-eticaret",no:null,topic:"E-Ticarette Buton Renginin Alışverişe Etkisi",short:"E-Ticaret Buton"},
+  {id:"n-kutuphane",no:null,topic:"Kütüphane Masa Rezervasyon Sistemi",short:"Kütüphane Masa"},
+  {id:"n-yeni",no:null,topic:"Yeni grup, konu belirlenmemiş",short:"Yeni grup"}
+];
+// Capacity from group count: even base per week, remainder goes to the last weeks.
+const base=Math.floor(GROUPS.length/WEEKS.length), extra=GROUPS.length%WEEKS.length;
+WEEKS.forEach((w,i)=>{w.cap=base+(i>=WEEKS.length-extra?1:0)});
+const byId=Object.fromEntries(GROUPS.map(g=>[g.id,g]));
+const label=g=>g.no?`Grup ${g.no}${g.topic?" – "+g.topic:" (konu belirtilmemiş)"}`:`Numarasız – ${g.topic}`;
+
+
+const SB_URL="https://wipkhqtlpeadjhzrvuyt.supabase.co", SB_KEY="sb_publishable_2kTxbaAA9hAfoCJl5kZRDQ_uDUMIgSB";
+const H={"apikey":SB_KEY,"Content-Type":"application/json"};
+async function rpc(fn,body){const r=await fetch(`${SB_URL}/rest/v1/rpc/${fn}`,{method:"POST",headers:H,body:JSON.stringify(body)});if(!r.ok) throw new Error(await r.text());const t=await r.text();return t?JSON.parse(t):null}
+const $=id=>document.getElementById(id);
+const state={prefs:{},loaded:false};
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function showStatus(text,kind){const el=$("status");el.textContent=text;el.dataset.kind=kind||"";el.hidden=!text}
+
+$("facts").innerHTML=`<span><b>${GROUPS.length}</b> grup</span><span><b>${WEEKS.length}</b> çarşamba</span><span>Haftalık sunum sayısı: <b>${WEEKS.map(w=>w.cap).join(" · ")}</b></span>`;
+$("group").innerHTML=`<option value="">Grubunuzu seçin</option>`+GROUPS.map(g=>`<option value="${g.id}">${esc(label(g))}</option>`).join("");
+const weekOpts=WEEKS.map((w,i)=>`<option value="${i}">${i+1}. hafta · ${w.d} Çarşamba</option>`).join("");
+$("first").innerHTML=`<option value="">Hafta seçin</option>`+weekOpts;
+$("second").innerHTML=`<option value="">Hafta seçin</option>`+weekOpts;
+
+function render(){
+  const firsts=WEEKS.map(()=>[]), seconds=WEEKS.map(()=>[]);
+  for(const g of GROUPS){const p=state.prefs[g.id]; if(!p) continue;
+    if(WEEKS[p.first]) firsts[p.first].push({g,p}); if(WEEKS[p.second]) seconds[p.second].push({g,p});}
+  $("board").innerHTML=WEEKS.map((w,i)=>{
+    const n=firsts[i].length;
+    const slots=Array.from({length:w.cap},()=>`<span class="slot"></span>`).join("");
+    const chip=(x,alt)=>`<span class="chip${alt?" alt":""}" title="${esc(label(x.g))}">${esc(x.g.short)}${x.p.hasReason?'<span class="r" aria-label="gerekçe var">✎</span>':""}</span>`;
+    const list=firsts[i].map(x=>chip(x,false)).join("")+seconds[i].map(x=>chip(x,true)).join("");
+    return `<article class="week"><div class="week-head"><div><div class="week-date">${w.d}</div><div class="week-day">Çarşamba</div></div><div class="week-no">${i+1}. hafta</div></div>
+      <div class="slots" aria-hidden="true">${slots}</div><span class="status full">${n} grup tercih etti · planlanan ${w.cap} sunum</span>
+      <div class="chips">${list||'<span class="empty">Henüz tercih yok</span>'}</div></article>`;
+  }).join("");
+  const miss=GROUPS.filter(g=>!state.prefs[g.id]);
+  $("missing").innerHTML=state.loaded?(miss.length?miss.map(g=>`<span title="${esc(label(g))}">${esc(g.short)}</span>`).join(""):'<span>Tüm gruplar tercih yaptı</span>'):'<span>Yükleniyor…</span>';
+  $("progress").textContent=state.loaded?`${GROUPS.length-miss.length} / ${GROUPS.length} grup tercih yaptı.`:"";
+}
+function fillForm(){
+  const p=state.prefs[$("group").value];
+  $("first").value=p?String(p.first):""; $("second").value=p?String(p.second):"";
+  $("clear").hidden=!p;
+}
+$("group").addEventListener("change",()=>{fillForm();$("reason").value=""});
+
+async function load(){
+  try{
+    const r=await fetch(`${SB_URL}/rest/v1/sunum_tercihleri?select=group_id,first_week,second_week,has_reason`,{headers:H});
+    if(!r.ok) throw 0;
+    const rows=await r.json(); const m={};
+    rows.forEach(x=>{if(byId[x.group_id]) m[x.group_id]={first:x.first_week,second:x.second_week,hasReason:x.has_reason}});
+    state.prefs=m; state.loaded=true; showStatus(""); render();
+  }catch(e){state.loaded=true;render();showStatus("Tercihlere şu an ulaşılamıyor. İnternet bağlantınızı kontrol edip sayfayı yenileyin.","warn")}
+}
+
+let saving=false;
+$("form").addEventListener("submit",async e=>{
+  e.preventDefault(); if(saving) return;
+  const msg=$("msg"); msg.className="msg";
+  const gid=$("group").value, f=$("first").value, s=$("second").value, reason=$("reason").value.trim();
+  const err=t=>{msg.textContent=t;msg.classList.add("err")};
+  if(!gid) return err("Önce grubunuzu seçin.");
+  if(f==="") return err("1. tercih haftasını seçin.");
+  if(s==="") return err("2. tercih haftasını seçin.");
+  if(s===f) return err("2. tercih, 1. tercihle aynı hafta olamaz.");
+  saving=true;$("save").disabled=true;msg.textContent="Kaydediliyor…";
+  try{
+    await rpc("sunum_kaydet",{p_group:gid,p_first:+f,p_second:+s,p_reason:reason});
+    msg.textContent=`${byId[gid].short} için tercih kaydedildi.`;msg.classList.add("ok");$("reason").value="";
+    await load(); fillForm();
+  }catch(e){err("Kaydedilemedi. İnternet bağlantınızı kontrol edip tekrar deneyin.")}
+  finally{saving=false;$("save").disabled=false}
+});
+$("clear").addEventListener("click",async()=>{
+  const gid=$("group").value; if(!gid) return;
+  const msg=$("msg"); msg.className="msg";
+  try{await rpc("sunum_geri_cek",{p_group:gid});msg.textContent=`${byId[gid].short} için tercih geri çekildi.`;msg.classList.add("ok");await load();fillForm()}
+  catch(e){msg.textContent="Geri çekilemedi. Tekrar deneyin.";msg.classList.add("err")}
+});
+
+$("ownerForm").addEventListener("submit",async e=>{
+  e.preventDefault(); const m=$("ownerMsg"); m.className="msg"; m.textContent="Yükleniyor…";
+  try{
+    const rows=await rpc("sunum_gerekceler",{p_kod:$("code").value.trim()});
+    const wk=i=>WEEKS[i]?WEEKS[i].d:"—";
+    rows.sort((a,b)=>GROUPS.indexOf(byId[a.group_id])-GROUPS.indexOf(byId[b.group_id])||a.created_at.localeCompare(b.created_at));
+    $("reasons").innerHTML=rows.length?rows.map(r=>`<tr><td>${esc(byId[r.group_id]?byId[r.group_id].short:r.group_id)}</td><td class="num">${wk(r.first_week)}</td><td class="num">${wk(r.second_week)}</td><td>${esc(r.reason)}</td><td class="num">${new Date(r.created_at).toLocaleString("tr-TR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</td></tr>`).join(""):`<tr><td colspan="5" class="empty">Henüz gerekçe yazılmadı.</td></tr>`;
+    $("reasonsWrap").hidden=false; m.textContent=`${rows.length} gerekçe. Tabloda her gerekçenin yazıldığı andaki tercih haftaları görünür.`;
+  }catch(e){m.textContent="Kod hatalı.";m.classList.add("err");$("reasonsWrap").hidden=true}
+});
+
+render(); load(); setInterval(()=>{if(!document.hidden&&!saving) load()},20000);
+</script>
+</body>
+</html>
