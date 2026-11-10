@@ -38,10 +38,10 @@ header p{margin:0;color:var(--muted);max-width:68ch}
 .notice[data-kind="warn"]{border-color:var(--warn);background:var(--warn-soft);color:var(--fg)}
 .board{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
 .week{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px;align-content:start;min-width:0}
-.week-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.week-date{font-family:var(--font-display);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
+.week-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 8px}
+.week-date{white-space:nowrap;font-family:var(--font-display);font-size:22px;font-weight:600;font-variant-numeric:tabular-nums}
 .week-day{font-size:12px;color:var(--muted)}
-.week-no{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.week-no{white-space:nowrap;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .slots{display:flex;gap:4px}
 .slot{flex:1;height:6px;border-radius:3px;background:var(--line)}
 .slot.on{background:var(--accent)}
@@ -59,6 +59,7 @@ header p{margin:0;color:var(--muted);max-width:68ch}
 .legend .chip{pointer-events:none}
 .grid2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:20px}
 @media (max-width:820px){.grid2{grid-template-columns:1fr}}
+@media (max-width:420px){.board{grid-template-columns:1fr 1fr;gap:8px}.week{padding:12px}.week-date{font-size:19px}}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:16px;align-content:start;min-width:0}
 form{display:grid;gap:14px}
 label{display:grid;gap:6px;font-weight:600;font-size:14px}
