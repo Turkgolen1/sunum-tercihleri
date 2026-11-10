@@ -167,26 +167,26 @@ const WEEKS=[
   {d:"25 Kasım"},{d:"2 Aralık"},{d:"9 Aralık"},{d:"16 Aralık"},{d:"23 Aralık"},{d:"30 Aralık"}
 ];
 const GROUPS=[
-  {id:"g16",no:16,topic:"",short:"Grup 16"},
-  {id:"g22",no:22,topic:"Şehir İçi Toplu Taşımada Akıllı Yolcu Bilgilendirme Sistemi",short:"Grup 22"},
-  {id:"g33",no:33,topic:"Renk Körlüğü Olan Bireyler İçin Kişiselleştirilmiş Android Uygulaması",short:"Grup 33"},
-  {id:"g37",no:37,topic:"Apartman Yönetimlerinde Borçluları Bulma, Bilgilendirme ve Yaptırım Sistemi",short:"Grup 37"},
-  {id:"g38",no:38,topic:"Konum Bazlı Ücretsiz Fırsat ve Öğrenci Dayanışma Uygulaması",short:"Grup 38"},
-  {id:"g44",no:44,topic:"Staj Yeri Değerlendirme Platformu",short:"Grup 44"},
-  {id:"g55",no:55,topic:"",short:"Grup 55"},
-  {id:"g58",no:58,topic:"Tatil Rotasyon ve Rezervasyon Sistemi",short:"Grup 58"},
-  {id:"g66",no:66,topic:"Saha Çalışanları İçin Görev ve Vardiya Takip Uygulaması",short:"Grup 66"},
-  {id:"n-endustri",no:null,topic:"Endüstriyel Vardiya ve Arıza Takip Sistemi",short:"Endüstriyel Vardiya"},
-  {id:"n-dusunce",no:null,topic:"Düşünce Haritalama ve Problem Çözme Sistemi",short:"Düşünce Haritalama"},
-  {id:"n-eticaret",no:null,topic:"E-Ticarette Buton Renginin Alışverişe Etkisi",short:"E-Ticaret Buton"},
-  {id:"n-kutuphane",no:null,topic:"Kütüphane Masa Rezervasyon Sistemi",short:"Kütüphane Masa"},
-  {id:"n-yeni",no:null,topic:"Yeni grup, konu belirlenmemiş",short:"Yeni grup"}
+  {id:"g16",no:16,short:"Grup 16"},
+  {id:"g22",no:22,short:"Grup 22"},
+  {id:"n-endustri",no:23,short:"Grup 23"},
+  {id:"g33",no:33,short:"Grup 33"},
+  {id:"g37",no:37,short:"Grup 37"},
+  {id:"g38",no:38,short:"Grup 38"},
+  {id:"g44",no:44,short:"Grup 44"},
+  {id:"g55",no:55,short:"Grup 55"},
+  {id:"g58",no:58,short:"Grup 58"},
+  {id:"g66",no:66,short:"Grup 66"},
+  {id:"n-yeni",no:67,short:"Grup 67"},
+  {id:"n-kutuphane",no:75,short:"Grup 75"},
+  {id:"n-dusunce",no:86,short:"Grup 86"},
+  {id:"n-eticaret",no:93,short:"Grup 93"}
 ];
 // Capacity from group count: even base per week, remainder goes to the last weeks.
 const base=Math.floor(GROUPS.length/WEEKS.length), extra=GROUPS.length%WEEKS.length;
 WEEKS.forEach((w,i)=>{w.cap=base+(i>=WEEKS.length-extra?1:0)});
 const byId=Object.fromEntries(GROUPS.map(g=>[g.id,g]));
-const label=g=>g.no?`Grup ${g.no}${g.topic?" – "+g.topic:" (konu belirtilmemiş)"}`:`Numarasız – ${g.topic}`;
+const label=g=>`Grup ${g.no}`;
 
 
 const SB_URL="https://wipkhqtlpeadjhzrvuyt.supabase.co", SB_KEY="sb_publishable_2kTxbaAA9hAfoCJl5kZRDQ_uDUMIgSB";
